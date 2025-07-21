@@ -1,85 +1,138 @@
--- script99.lua
--- Menu GUI completo e bonito
+-- GeladinhoPlayer Hub Completo
 
-local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local Title = Instance.new("TextLabel")
-local Button1 = Instance.new("TextButton")
-local Button2 = Instance.new("TextButton")
-local CloseButton = Instance.new("TextButton")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- Configurações iniciais
-ScreenGui.Name = "GeladinhoMenu"
+-- Criar a GUI
+local ScreenGui = Instance.new("ScreenGui", PlayerGui)
+ScreenGui.Name = "GeladinhoHub"
 ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Estilo do menu
-MainFrame.Name = "MainFrame"
-MainFrame.Parent = ScreenGui
+-- Fundo principal
+local MainFrame = Instance.new("Frame", ScreenGui)
 MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
-MainFrame.Size = UDim2.new(0, 350, 0, 250)
-MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+MainFrame.Size = UDim2.new(0, 400, 0, 300)
 MainFrame.Active = true
 MainFrame.Draggable = true
+MainFrame.BorderSizePixel = 0
 
--- Título
-Title.Name = "Title"
-Title.Parent = MainFrame
-Title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Title.Size = UDim2.new(1, 0, 0, 40)
+-- Topo
+local TopBar = Instance.new("Frame", MainFrame)
+TopBar.Size = UDim2.new(1, 0, 0, 40)
+TopBar.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+TopBar.BorderSizePixel = 0
+
+local Title = Instance.new("TextLabel", TopBar)
+Title.Size = UDim2.new(1, -40, 1, 0)
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "🌲 Geladinho Hub"
 Title.Font = Enum.Font.GothamBold
-Title.Text = "🌲 99 Dias na Floresta - Menu"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 18
+Title.TextXAlignment = Enum.TextXAlignment.Left
 
--- Botão 1
-Button1.Name = "Button1"
-Button1.Parent = MainFrame
-Button1.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Button1.Position = UDim2.new(0.1, 0, 0.3, 0)
-Button1.Size = UDim2.new(0.8, 0, 0, 40)
-Button1.Font = Enum.Font.Gotham
-Button1.Text = "Executar ação 1"
-Button1.TextColor3 = Color3.fromRGB(255, 255, 255)
-Button1.TextSize = 14
-Button1.MouseButton1Click:Connect(function()
-	game.StarterGui:SetCore("SendNotification", {
-		Title = "Ação 1";
-		Text = "Você clicou no botão 1!";
-		Duration = 3;
-	})
-end)
-
--- Botão 2
-Button2.Name = "Button2"
-Button2.Parent = MainFrame
-Button2.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Button2.Position = UDim2.new(0.1, 0, 0.55, 0)
-Button2.Size = UDim2.new(0.8, 0, 0, 40)
-Button2.Font = Enum.Font.Gotham
-Button2.Text = "Executar ação 2"
-Button2.TextColor3 = Color3.fromRGB(255, 255, 255)
-Button2.TextSize = 14
-Button2.MouseButton1Click:Connect(function()
-	game.StarterGui:SetCore("SendNotification", {
-		Title = "Ação 2";
-		Text = "Você clicou no botão 2!";
-		Duration = 3;
-	})
-end)
-
--- Botão Fechar
-CloseButton.Name = "CloseButton"
-CloseButton.Parent = MainFrame
-CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-CloseButton.Position = UDim2.new(1, -25, 0, 5)
-CloseButton.Size = UDim2.new(0, 20, 0, 20)
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.TextSize = 14
-CloseButton.MouseButton1Click:Connect(function()
+local CloseBtn = Instance.new("TextButton", TopBar)
+CloseBtn.Size = UDim2.new(0, 30, 0, 30)
+CloseBtn.Position = UDim2.new(1, -35, 0, 5)
+CloseBtn.Text = "X"
+CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 14
+CloseBtn.MouseButton1Click:Connect(function()
 	ScreenGui:Destroy()
 end)
+
+-- Aba lateral
+local TabBar = Instance.new("Frame", MainFrame)
+TabBar.Size = UDim2.new(0, 100, 1, -40)
+TabBar.Position = UDim2.new(0, 0, 0, 40)
+TabBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+
+-- Botões das abas
+local function createTabButton(name, yPosition)
+	local button = Instance.new("TextButton", TabBar)
+	button.Size = UDim2.new(1, 0, 0, 40)
+	button.Position = UDim2.new(0, 0, 0, yPosition)
+	button.Text = name
+	button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	button.TextColor3 = Color3.fromRGB(255, 255, 255)
+	button.Font = Enum.Font.Gotham
+	button.TextSize = 14
+	return button
+end
+
+local scriptTabBtn = createTabButton("Scripts", 0)
+local configTabBtn = createTabButton("Config", 50)
+local creditTabBtn = createTabButton("Créditos", 100)
+
+-- Páginas
+local Pages = {}
+
+local function createPage(name)
+	local page = Instance.new("Frame", MainFrame)
+	page.Name = name
+	page.Size = UDim2.new(1, -100, 1, -40)
+	page.Position = UDim2.new(0, 100, 0, 40)
+	page.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	page.Visible = false
+	Pages[name] = page
+	return page
+end
+
+local ScriptPage = createPage("Scripts")
+local ConfigPage = createPage("Config")
+local CreditPage = createPage("Créditos")
+
+-- Mostrar página
+local function showPage(name)
+	for _, page in pairs(Pages) do
+		page.Visible = false
+	end
+	Pages[name].Visible = true
+end
+
+-- Conectar botões das abas
+scriptTabBtn.MouseButton1Click:Connect(function() showPage("Scripts") end)
+configTabBtn.MouseButton1Click:Connect(function() showPage("Config") end)
+creditTabBtn.MouseButton1Click:Connect(function() showPage("Créditos") end)
+showPage("Scripts")
+
+-- Conteúdo da aba Scripts
+local scriptBtn = Instance.new("TextButton", ScriptPage)
+scriptBtn.Size = UDim2.new(0, 200, 0, 40)
+scriptBtn.Position = UDim2.new(0, 20, 0, 20)
+scriptBtn.Text = "▶️ 99 Dias na Floresta"
+scriptBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+scriptBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+scriptBtn.Font = Enum.Font.Gotham
+scriptBtn.TextSize = 14
+scriptBtn.MouseButton1Click:Connect(function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/GeladinhoPlayer/Loader2/main/99dias.lua"))()
+end)
+
+-- Conteúdo da aba Config
+local infoLabel = Instance.new("TextLabel", ConfigPage)
+infoLabel.Size = UDim2.new(1, -20, 0, 100)
+infoLabel.Position = UDim2.new(0, 10, 0, 20)
+infoLabel.BackgroundTransparency = 1
+infoLabel.TextWrapped = true
+infoLabel.Text = "🔧 Configurações futuras em desenvolvimento!"
+infoLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+infoLabel.Font = Enum.Font.Gotham
+infoLabel.TextSize = 14
+
+-- Conteúdo da aba Créditos
+local creditText = Instance.new("TextLabel", CreditPage)
+creditText.Size = UDim2.new(1, -20, 1, -20)
+creditText.Position = UDim2.new(0, 10, 0, 10)
+creditText.BackgroundTransparency = 1
+creditText.TextWrapped = true
+creditText.Text = "🎖️ Feito por GeladinhoPlayer\nGitHub: @GeladinhoPlayer"
+creditText.TextColor3 = Color3.fromRGB(255, 255, 255)
+creditText.Font = Enum.Font.Gotham
+creditText.TextSize = 14
+creditText.TextYAlignment = Enum.TextYAlignment.Top
