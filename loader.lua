@@ -39,7 +39,9 @@ local function createKeyPanel()
                 Image = "rbxassetid://4483345998",
                 Time = 5
             })
-            -- Aqui você pode adicionar o código para carregar o script principal
+            -- Carrega o painel principal
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/GeladinhoPlayer/Loader2/refs/heads/main/script99.lua"))()
+            Window:Destroy()
         else
             OrionLib:MakeNotification({
                 Name = "Acesso Negado",
