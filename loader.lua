@@ -1,75 +1,76 @@
--- loader.lua - Sistema LightScripts com key LightIsPower
-local KeyCorreta = "LightIsPower"
-local URL_Menu = "https://raw.githubusercontent.com/GeladinhoPlayer/Loader2/refs/heads/main/script99.lua"
+-- LightScripts Loader com Key System
+local keyCorreta = "LightIsPower"
+local linkScript = "https://raw.githubusercontent.com/GeladinhoPlayer/Loader2/refs/heads/main/script99.lua"
 
-local player = game:GetService("Players").LocalPlayer
+-- Criar GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "LightScriptsKeySystem"
+gui.ResetOnSpawn = false
+gui.Parent = game.CoreGui
 
--- Interface do sistema
-local Gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-Gui.Name = "LightScriptsLoader"
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 300, 0, 180)
+frame.Position = UDim2.new(0.5, -150, 0.5, -90)
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0.1
 
-local Frame = Instance.new("Frame", Gui)
-Frame.Size = UDim2.new(0, 400, 0, 250)
-Frame.Position = UDim2.new(0.5, -200, 0.5, -125)
-Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Frame.BorderSizePixel = 0
-Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 12)
+local uicorner = Instance.new("UICorner", frame)
+uicorner.CornerRadius = UDim.new(0, 10)
 
-local Title = Instance.new("TextLabel", Frame)
-Title.Size = UDim2.new(1, 0, 0, 50)
-Title.Text = "🚀 LightScripts Loader"
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 22
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.BackgroundTransparency = 1
+local title = Instance.new("TextLabel", frame)
+title.Text = "🔐 LightScripts - Key System"
+title.Size = UDim2.new(1, 0, 0, 40)
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.GothamBold
+title.TextScaled = true
 
-local Input = Instance.new("TextBox", Frame)
-Input.PlaceholderText = "Digite a key: LightIsPower"
-Input.Size = UDim2.new(0.85, 0, 0, 40)
-Input.Position = UDim2.new(0.075, 0, 0.4, 0)
-Input.Font = Enum.Font.Gotham
-Input.TextSize = 16
-Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-Input.TextColor3 = Color3.new(1, 1, 1)
-Input.ClearTextOnFocus = false
-Instance.new("UICorner", Input).CornerRadius = UDim.new(0, 8)
+local textbox = Instance.new("TextBox", frame)
+textbox.PlaceholderText = "Digite a key aqui..."
+textbox.Size = UDim2.new(0.9, 0, 0, 40)
+textbox.Position = UDim2.new(0.05, 0, 0.4, 0)
+textbox.Font = Enum.Font.Gotham
+textbox.TextScaled = true
+textbox.Text = ""
+textbox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+textbox.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-local Button = Instance.new("TextButton", Frame)
-Button.Text = "Verificar e Iniciar"
-Button.Size = UDim2.new(0.85, 0, 0, 38)
-Button.Position = UDim2.new(0.075, 0, 0.65, 0)
-Button.Font = Enum.Font.GothamBold
-Button.TextSize = 16
-Button.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
-Button.TextColor3 = Color3.new(1, 1, 1)
-Instance.new("UICorner", Button).CornerRadius = UDim.new(0, 8)
+local uiCorner2 = Instance.new("UICorner", textbox)
+uiCorner2.CornerRadius = UDim.new(0, 6)
 
-local Aviso = Instance.new("TextLabel", Frame)
-Aviso.Text = ""
-Aviso.Size = UDim2.new(1, 0, 0, 25)
-Aviso.Position = UDim2.new(0, 0, 0.9, 0)
-Aviso.Font = Enum.Font.GothamSemibold
-Aviso.TextSize = 14
-Aviso.TextColor3 = Color3.new(1, 1, 1)
-Aviso.BackgroundTransparency = 1
+local botao = Instance.new("TextButton", frame)
+botao.Text = "✅ Verificar Key"
+botao.Size = UDim2.new(0.9, 0, 0, 35)
+botao.Position = UDim2.new(0.05, 0, 0.7, 0)
+botao.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+botao.TextColor3 = Color3.fromRGB(255, 255, 255)
+botao.Font = Enum.Font.GothamBold
+botao.TextScaled = true
 
--- Sistema de verificação
-Button.MouseButton1Click:Connect(function()
-	if Input.Text == KeyCorreta then
-		Aviso.Text = "✅ Key correta! Carregando menu..."
-		Aviso.TextColor3 = Color3.fromRGB(0, 255, 127)
+local uiCorner3 = Instance.new("UICorner", botao)
+uiCorner3.CornerRadius = UDim.new(0, 6)
+
+local aviso = Instance.new("TextLabel", frame)
+aviso.Text = ""
+aviso.Size = UDim2.new(1, 0, 0, 20)
+aviso.Position = UDim2.new(0, 0, 1, -20)
+aviso.TextColor3 = Color3.fromRGB(255, 100, 100)
+aviso.BackgroundTransparency = 1
+aviso.Font = Enum.Font.Gotham
+aviso.TextScaled = true
+
+-- Verificação
+botao.MouseButton1Click:Connect(function()
+	local digitado = textbox.Text
+	if digitado == keyCorreta then
+		aviso.TextColor3 = Color3.fromRGB(0, 255, 127)
+		aviso.Text = "✅ Key correta! Carregando menu..."
 		wait(1)
-		Gui:Destroy()
-		
-		local success, result = pcall(function()
-			return loadstring(game:HttpGet(URL_Menu, true))()
-		end)
-
-		if not success then
-			warn("Erro ao carregar o menu:", result)
-		end
+		gui:Destroy()
+		loadstring(game:HttpGet(linkScript))()
 	else
-		Aviso.Text = "❌ Key incorreta! Tente novamente."
-		Aviso.TextColor3 = Color3.fromRGB(255, 70, 70)
+		aviso.TextColor3 = Color3.fromRGB(255, 70, 70)
+		aviso.Text = "❌ Key incorreta. Tente novamente!"
 	end
 end)
