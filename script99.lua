@@ -1,104 +1,115 @@
+-- ⛔ Anti-Erro: Define LocalPlayer no início
 local player = game.Players.LocalPlayer
-local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/jensonhirst/Orion/main/source'))()
+
+-- 📦 Carrega OrionLib
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/jensonhirst/Orion/main/source"))()
+
+-- 🪟 Cria janela principal
 local Window = OrionLib:MakeWindow({
-  Name = "99 Dias Na Floresta",
-  HidePremium = false,
-  SaveConfig = true,
-  ConfigFolder = "OrionTest"
+    Name = "99 Dias na Floresta - Geladinho",
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "99DiasNaFloresta",
+    IntroEnabled = false,
+    Icon = "rbxassetid://4483345998"
 })
 
--- 📂 Aba ESP
-local TabESP = Window:MakeTab({Name = "ESP", Icon = "rbxassetid://4483345998"})
-local SecESP = TabESP:AddSection({Name = "Configurações de ESP"})
+-- 📌 Aba Menu e Créditos
+local TabMenu = Window:MakeTab({ Name = "Menu", Icon = "rbxassetid://4483345998" })
+local SectionCreditos = TabMenu:AddSection({ Name = "Créditos" })
+SectionCreditos:AddLabel("Desenvolvedor: GeladinhoPlayer")
+SectionCreditos:AddLabel("Base: ScriptHub")
+
+-- ⚙️ ESP
+local TabESP = Window:MakeTab({ Name = "ESP", Icon = "rbxassetid://4483345998" })
+local SectionESP = TabESP:AddSection({ Name = "Configurações de ESP" })
 
 local ESPEnabled, BoxESP, NameESP, DistanceESP = false, false, false, false
-local BoxColor = Color3.new(1, 0, 0)
-local RunService = game:GetService("RunService")
+local BoxColor = Color3.fromRGB(255, 0, 0)
 
--- Cria ESP para cada player
-local function CreatePlayerESP(target)
-  if target == player then return end
-  local char = target.Character or target.CharacterAdded:Wait()
-  local hrp = char:WaitForChild("HumanoidRootPart")
+SectionESP:AddToggle({ Name = "Ativar ESP", Default = false, Callback = function(v) ESPEnabled = v end })
+SectionESP:AddToggle({ Name = "Box ESP", Default = false, Callback = function(v) BoxESP = v end })
+SectionESP:AddToggle({ Name = "Name ESP", Default = false, Callback = function(v) NameESP = v end })
+SectionESP:AddToggle({ Name = "Distância ESP", Default = false, Callback = function(v) DistanceESP = v end })
+SectionESP:AddColorpicker({ Name = "Cor da ESP", Default = BoxColor, Callback = function(v) BoxColor = v end })
 
-  local nameTxt = Drawing.new("Text")
-  local box = Drawing.new("Square")
-  local distTxt = Drawing.new("Text")
+-- ⚔️ Auto Kill
+local TabAutoKill = Window:MakeTab({ Name = "Auto Kill", Icon = "rbxassetid://4483345998" })
+local SectionAutoKill = TabAutoKill:AddSection({ Name = "Auto Eliminação" })
 
-  RunService.RenderStepped:Connect(function()
-    local cam = workspace.CurrentCamera
-    local pos, onScreen = cam:WorldToViewportPoint(hrp.Position)
-    if ESPEnabled and onScreen then
-      -- Nome
-      nameTxt.Visible = NameESP
-      nameTxt.Text = target.Name
-      nameTxt.Color = BoxColor
-      nameTxt.Position = Vector2.new(pos.X, pos.Y - 40)
+local AutoKillEnabled, KillDistance = false, 10
 
-      -- Caixa
-      box.Visible = BoxESP
-      box.Color = BoxColor
-      box.Thickness = 2
-      local size = 2000 / pos.Z
-      box.Size = Vector2.new(size, size)
-      box.Position = Vector2.new(pos.X - size / 2, pos.Y - size / 2)
+SectionAutoKill:AddToggle({
+    Name = "Ativar Auto Kill",
+    Default = false,
+    Callback = function(v) AutoKillEnabled = v end
+})
 
-      -- Distância
-      distTxt.Visible = DistanceESP
-      distTxt.Text = math.floor((cam.CFrame.Position - hrp.Position).Magnitude).."m"
-      distTxt.Color = BoxColor
-      distTxt.Position = Vector2.new(pos.X, pos.Y + 40)
-    else
-      nameTxt.Visible = box.Visible and false
-      box.Visible = box.Visible and false
-      distTxt.Visible = distTxt.Visible and false
-    end
-  end)
-end
+SectionAutoKill:AddSlider({
+    Name = "Distância de Ataque",
+    Min = 5, Max = 50, Default = 10, Increment = 1,
+    Suffix = " studs",
+    Callback = function(v) KillDistance = v end
+})
 
-for _, pl in ipairs(game.Players:GetPlayers()) do
-  CreatePlayerESP(pl)
-end
-game.Players.PlayerAdded:Connect(CreatePlayerESP)
+-- 🔧 Extras
+local TabExtras = Window:MakeTab({ Name = "Extras", Icon = "rbxassetid://4483345998" })
+local SectionExtras = TabExtras:AddSection({ Name = "Funcionalidades" })
 
-SecESP:AddToggle({Name = "Ativar ESP", Callback = function(v) ESPEnabled = v end})
-SecESP:AddToggle({Name = "Box ESP", Callback = function(v) BoxESP = v end})
-SecESP:AddToggle({Name = "Name ESP", Callback = function(v) NameESP = v end})
-SecESP:AddToggle({Name = "Distância ESP", Callback = function(v) DistanceESP = v end})
-SecESP:AddColorpicker({Name = "Cor da ESP", Default = BoxColor, Callback = function(c) BoxColor = c end})
+SectionExtras:AddButton({ Name = "Super Velocidade", Callback = function() player.Character.Humanoid.WalkSpeed = 500 end })
+SectionExtras:AddButton({ Name = "Super Pulo", Callback = function() player.Character.Humanoid.JumpPower = 100 end })
+SectionExtras:AddButton({ Name = "Gravidade Baixa", Callback = function() game.Workspace.Gravity = 10 end })
 
--- 📂 Aba Auto-Kill com Machado
-local TabKill = Window:MakeTab({Name = "Auto Kill", Icon = "rbxassetid://4483345998"})
-local SecKill = TabKill:AddSection({Name = "Configurações Auto-Kill"})
+-- ⚙️ Configurações
+local TabConfig = Window:MakeTab({ Name = "Configurações", Icon = "rbxassetid://4483345998" })
+local SectionConfig = TabConfig:AddSection({ Name = "Ajustes" })
 
-local AutoKill = false
-local maxDist = 10
+SectionConfig:AddButton({ Name = "Salvar", Callback = function() OrionLib:SaveConfig() end })
+SectionConfig:AddButton({ Name = "Carregar", Callback = function() OrionLib:LoadConfig() end })
+SectionConfig:AddButton({ Name = "Resetar", Callback = function() OrionLib:ResetConfig() end })
 
-SecKill:AddToggle({Name = "Ativar Auto-Kill", Default = false, Callback = function(v) AutoKill = v end})
-SecKill:AddSlider({Name = "Alcance (studs)", Min = 5, Max = 50, Default = 10, Increment = 1, Suffix = " stud", Callback = function(v) maxDist = v end})
+-- ❓ Ajuda
+local TabAjuda = Window:MakeTab({ Name = "Ajuda", Icon = "rbxassetid://4483345998" })
+local SectionAjuda = TabAjuda:AddSection({ Name = "Instruções" })
 
-RunService.Heartbeat:Connect(function()
-  if not (AutoKill and player.Character and player.Character:FindFirstChild("HumanoidRootPart")) then return end
-  local root = player.Character.HumanoidRootPart
-  for _, mob in ipairs(workspace:GetDescendants()) do
-    if mob:IsA("Model") and mob:FindFirstChild("Humanoid") and mob:FindFirstChild("HumanoidRootPart") then
-      local dist = (mob.HumanoidRootPart.Position - root.Position).Magnitude
-      if dist <= maxDist then
-        local cd = mob:FindFirstChildWhichIsA("ClickDetector")
-        if cd then
-          fireclickdetector(cd)
-        else
-          mob.Humanoid:TakeDamage(9999)
+SectionAjuda:AddLabel("1. Use o ESP para ver inimigos.")
+SectionAjuda:AddLabel("2. Auto Kill ataca inimigos automaticamente.")
+SectionAjuda:AddLabel("3. Extras melhoram sua movimentação.")
+SectionAjuda:AddLabel("4. Configurações podem ser salvas.")
+
+-- 👨‍💻 Desenvolvedor
+local TabDev = Window:MakeTab({ Name = "Dev", Icon = "rbxassetid://4483345998" })
+local SectionDev = TabDev:AddSection({ Name = "Execução" })
+
+SectionDev:AddButton({
+    Name = "Executar código manual",
+    Callback = function()
+        local success, code = pcall(function()
+            return OrionLib:PromptInput({
+                Title = "Executar Lua",
+                Placeholder = "Digite o código aqui"
+            })
+        end)
+        if success and code and code ~= "" then
+            pcall(loadstring(code))
         end
-      end
     end
-  end
+})
+
+-- 🚨 Loop de Auto Kill
+task.spawn(function()
+    while task.wait(1) do
+        if AutoKillEnabled then
+            for _, enemy in pairs(workspace:GetDescendants()) do
+                if enemy:IsA("Model") and enemy:FindFirstChild("Humanoid") and enemy ~= player.Character then
+                    local humanoid = enemy:FindFirstChild("Humanoid")
+                    if (enemy.PrimaryPart and player.Character.PrimaryPart and (enemy.PrimaryPart.Position - player.Character.PrimaryPart.Position).Magnitude <= KillDistance) then
+                        humanoid:TakeDamage(100)
+                    end
+                end
+            end
+        end
+    end
 end)
 
--- Notificação de carregamento
-OrionLib:MakeNotification({
-  Name = "Carregado!",
-  Content = "ESP e Auto-Kill ativos.",
-  Image = "rbxassetid://4483345998",
-  Time = 5
-})
+-- ℹ️ Você pode adaptar esse loop para armas como machado ou ferramentas.
