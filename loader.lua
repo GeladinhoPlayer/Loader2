@@ -102,7 +102,7 @@ CheckKey.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
 
 -- Put Your Script Here
-loadstring(game:HttpGet('https://pastebin.com/raw/YSL3xKYU'))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/GeladinhoPlayer/Loader2/main/script99.lua"))()
 
     else
         TextBox.PlaceholderText = "Invalid key. Try again."
